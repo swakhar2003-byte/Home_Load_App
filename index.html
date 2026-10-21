@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Home Energy</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#14181f;--mu:#667085;--bd:#e3e6ec;--ac:#f59e0b;--ac2:#b45309;--ok:#16a34a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1115;--card:#181b22;--tx:#eceff4;--mu:#98a2b3;--bd:#2a2f3a;--ac:#fbbf24;--ac2:#fcd34d;--ok:#4ade80;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1115;--card:#181b22;--tx:#eceff4;--mu:#98a2b3;--bd:#2a2f3a;--ac:#fbbf24;--ac2:#fcd34d;--ok:#4ade80;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI","Noto Sans Bengali",sans-serif}
+.w{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:4px 0 2px}.sub{color:var(--mu);font-size:13px;margin-bottom:14px}
+.tabs{display:flex;gap:6px;margin-bottom:14px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:6px 0;z-index:5}
+.tabs button{flex:1;padding:9px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--ac);color:#111;border-color:var(--ac);font-weight:600}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 8px;font-size:16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--bd)}
+.row:first-of-type{border-top:0}.row .n{flex:1}.row .w2{color:var(--mu);font-size:12px}
+.st{display:flex;align-items:center;gap:6px}
+.st button{width:34px;height:34px;border-radius:9px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:18px;cursor:pointer}
+.st b{min-width:44px;text-align:center}
+.on-c{color:var(--ac2);font-weight:600}
+input,button.btn{font:inherit;color:var(--tx)}
+input[type=text],input[type=number],input[type=datetime-local]{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:7px 9px;width:100%}
+.btn{background:var(--ac);color:#111;border:0;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}
+.btn.g{background:var(--bg);color:var(--tx);border:1px solid var(--bd);font-weight:500}
+.btn.sm{padding:6px 10px;font-size:13px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.sc{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
+th,td{padding:6px 8px;border-bottom:1px solid var(--bd);text-align:right}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+th{color:var(--mu);font-weight:600}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:12px}
+.kp div{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px}
+.kp small{color:var(--mu);display:block}.kp b{font-size:20px}
+.cfg{display:grid;grid-template-columns:2fr 1fr 1fr 1.7fr auto;gap:6px;margin-top:6px;align-items:center}
+.cfg>*{min-width:0}
+select{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:7px 4px;width:100%;font:inherit;font-size:12px}
+.hd{color:var(--mu);font-size:12px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ok);color:#06210f;padding:9px 16px;border-radius:99px;font-weight:600;opacity:0;transition:.25s;pointer-events:none}
+.toast.s{opacity:1}
+pre{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:10px;overflow-x:auto;font-size:12px;margin:8px 0 0;max-height:220px}
+.ban{border-color:var(--ac);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.row .w2{display:block;margin-top:2px}
+.wi{width:64px!important;padding:3px 6px!important;font-size:12px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;flex-basis:100%}
+.chip{padding:9px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);cursor:pointer;font:inherit;font-size:13px}
+.chip.on{background:var(--ac);color:#111;border-color:var(--ac);font-weight:600}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div class="w">
+<h1>⚡ Home Energy Logger</h1>
+<div class="sub">প্রতি ঘণ্টায় ইনপুট দিন → CSV নিজে থেকে তৈরি হতে থাকবে।</div>
+<div class="tabs"><button data-t="in" class="on">ইনপুট</button><button data-t="hist">ইতিহাস ও CSV</button><button data-t="cfg">সেটআপ</button></div>
+
+<section id="in">
+ <div class="card ban hide" id="ban"><span>✎ পুরনো এন্ট্রি এডিট করছেন (Watt, সংখ্যা, সময়, নোট বদলানো যাবে)</span><button class="btn g sm" id="cx">বাতিল</button></div>
+ <div class="card"><div class="hd">তারিখ ও সময়</div><input type="datetime-local" id="dt"></div>
+ <div class="card"><div class="hd">নোট / বিবরণ (ঐচ্ছিক)</div><input type="text" id="note" placeholder="যেমন: অতিথি এসেছিল, AC চলেছে..."></div>
+ <div id="rooms"></div>
+ <div class="card"><div style="display:flex;justify-content:space-between"><span>মোট লোড</span><b id="tot" class="on-c">0 W</b></div>
+ <div class="acts"><button class="btn" id="save">✅ সেভ করুন</button><button class="btn g" id="allon">সব ON</button><button class="btn g" id="allof">সব OFF</button><button class="btn g" id="same">আগের ঘণ্টার মতো</button></div></div>
+</section>
+
+<section id="hist" class="hide">
+ <div class="kp"><div><small>শেষ ২৪ এন্ট্রি (kWh)</small><b id="k1">0</b></div><div><small>খরচ (৳)</small><b id="k2">0</b></div><div><small>মোট এন্ট্রি</small><b id="k3">0</b></div></div>
+ <div class="card"><h3>ঘরভিত্তিক (শেষ ২৪ এন্ট্রি)</h3><div id="rk"></div></div>
+ <div class="card"><h3>CSV ফাইল <span class="hd" id="csvn"></span></h3>
+  <div class="acts"><button class="btn" id="dl">⬇ CSV ডাউনলোড</button><button class="btn g" id="dl2">⬇ বিস্তারিত CSV</button><button class="btn g" id="cp">কপি</button></div>
+  <pre id="pv"></pre></div>
+ <div class="card"><h3>সব এন্ট্রি</h3><div class="sc" id="tb"></div>
+  <div class="acts"><button class="btn g sm" id="del">শেষ এন্ট্রি মুছুন</button><button class="btn g sm" id="clr">সব ডেটা মুছুন</button></div></div>
+</section>
+
+<section id="cfg" class="hide">
+ <div class="card"><div class="hd">বিদ্যুতের রেট (৳ প্রতি kWh)</div><input type="number" id="tf" step="0.1" min="0"></div>
+ <div class="card"><h3>🌙 রাতের নিয়ম (অটো) <label style="font-size:13px;font-weight:400"><input type="checkbox" id="nt"> চালু</label></h3>
+  <div class="cfg" style="grid-template-columns:1fr 1fr"><div><div class="hd">শুরু (ঘণ্টা, ০–২৩)</div><input type="number" id="nf" min="0" max="23"></div><div><div class="hd">শেষ (ঘণ্টা, ১–২৪)</div><input type="number" id="ne" min="1" max="24"></div></div>
+  <div class="hd" style="margin-top:8px">এই সময়ে প্রতিটি যন্ত্র নিচের "রাতের অবস্থা" অনুযায়ী নিজে থেকে ON/OFF ধরা হবে। আপনার ইনপুট লাগবে না।</div></div>
+ <div class="card"><h3>⏰ ঘণ্টার অ্যালার্ম <label style="font-size:13px;font-weight:400"><input type="checkbox" id="al"> চালু</label></h3>
+  <div class="hd">প্রতি ঘণ্টায় কত মিনিটে বাজবে (০–৫৯)</div><input type="number" id="am" min="0" max="59">
+  <div class="hd" style="margin-top:6px">রাতের নিয়মের ঘণ্টাগুলোতে অ্যালার্ম বাজবে না।</div>
+  <div class="acts"><button class="btn sm" id="aperm">অনুমতি দিন ও সেট করুন</button><button class="btn g sm" id="atest">টেস্ট (১০ সেকেন্ড পর)</button></div>
+  <div class="hd" id="ast" style="margin-top:6px"></div></div>
+ <div id="cfgr"></div>
+ <button class="btn g" id="addr">+ নতুন ঘর</button>
+</section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY="home_energy_v1";
+const DEF={tariff:0,rooms:[
+ {name:"ঘর ১",apps:[{name:"Light",qty:2,watt:10},{name:"Fan",qty:1,watt:75}]},
+ {name:"ঘর ২",apps:[{name:"Light",qty:3,watt:12},{name:"Fan",qty:2,watt:75},{name:"TV",qty:1,watt:100}]},
+ {name:"ঘর ৩",apps:[{name:"Light",qty:1,watt:15},{name:"Fridge",qty:1,watt:150}]},
+ {name:"ঘর ৪",apps:[{name:"Light",qty:2,watt:10},{name:"Fan",qty:1,watt:75}]}],log:[]};
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY))||null}catch(e){S=null}
+if(!S||!S.rooms)S=JSON.parse(JSON.stringify(DEF));
+if(!S.night)S.night={on:true,from:1,to:6};
+if(!S.alarm)S.alarm={on:true,min:0};
+S.rooms.forEach(r=>r.apps.forEach(a=>{if(a.night===undefined)a.night=/light|লাইট|বাতি|lamp|\bled\b|bulb|tube/i.test(a.name)?"off":/fan|ফ্যান|পাখা/i.test(a.name)?"on":""}));
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=id=>document.getElementById(id);
+let cur=[],VR=[],editTs=null; // cur=counts[room][app], VR=working rooms copy
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("s");setTimeout(()=>t.classList.remove("s"),1800)}
+function pad(n){return String(n).padStart(2,"0")}
+function nowHour(){const d=new Date();d.setMinutes(0,0,0);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":00"}
+function lastCounts(){
+ const l=S.log[S.log.length-1];
+ return S.rooms.map((r,ri)=>r.apps.map((a,ai)=>{
+  if(!l)return 0;const lr=l.rooms.find(x=>x.room===r.name);
+  const la=lr&&lr.apps.find(x=>x.name===a.name);return la?Math.min(la.cnt,a.qty):0}));
+}
+function loadOf(ri){return VR[ri].apps.reduce((s,a,ai)=>s+cur[ri][ai]*a.watt,0)}
+function renderIn(){
+ const h=$("rooms");h.innerHTML="";
+ VR.forEach((r,ri)=>{
+  const c=document.createElement("div");c.className="card";
+  c.innerHTML='<h3><span></span><span class="on-c" id="rl'+ri+'"></span></h3>';
+  c.querySelector("span").textContent="🏠 "+r.name;
+  r.apps.forEach((a,ai)=>{
+   const row=document.createElement("div");row.className="row";
+   row.innerHTML='<div class="n"></div><span class="on-c ln" style="min-width:58px;text-align:right"></span><div class="chips"></div>';
+   row.querySelector(".n").innerHTML="<span></span> <span class='w2'></span>";
+   row.querySelector(".n span").textContent=a.name;
+   row.querySelector(".w2").innerHTML='<input class="wi" type="number" min="0"> W × <input class="wi" type="number" min="1">';
+   const ch=row.querySelector(".chips");
+   const drawChips=()=>{ch.innerHTML="";a.u.forEach((on,ui)=>{const bt=document.createElement("button");bt.className="chip"+(on?" on":"");bt.textContent=(on?"💡 ":"⚫ ")+a.name+" "+(ui+1)+(on?" · ON":" · OFF");bt.onclick=()=>{a.u[ui]=a.u[ui]?0:1;up()};ch.appendChild(bt)})};
+   const up=()=>{cur[ri][ai]=a.u.reduce((s,x)=>s+x,0);drawChips();row.querySelector(".ln").textContent=cur[ri][ai]*a.watt+" W";$("rl"+ri).textContent=loadOf(ri)+" W";$("tot").textContent=VR.reduce((s,_,i)=>s+loadOf(i),0)+" W"};
+   const wi=row.querySelectorAll(".wi");wi[0].value=a.watt;wi[1].value=a.qty;
+   wi[0].onchange=()=>{a.watt=Math.max(0,+wi[0].value||0);up()};
+   wi[1].onchange=()=>{a.qty=Math.max(1,+wi[1].value||1);a.u=Array.from({length:a.qty},(_,i)=>a.u[i]||0);up()};
+   c.appendChild(row);row._up=up;
+  });
+  h.appendChild(c);
+  c.querySelectorAll(".row").forEach(r=>r._up());
+ });
+}
+function inNight(h){const n=S.night;if(!n||!n.on)return false;const f=+n.from,t=+n.to;return f<t?(h>=f&&h<t):(h>=f||h<t)}
+function nightU(a){return a.night==="off"?Array(a.qty).fill(0):a.night==="on"?Array(a.qty).fill(1):null}
+function applyNight(){VR.forEach(r=>r.apps.forEach(a=>{const u=nightU(a);if(u)a.u=u}))}
+function autoFill(){
+ if(!S.night||!S.night.on)return 0;
+ const L=S.log[S.log.length-1];if(!L)return 0;
+ const nowD=new Date();nowD.setMinutes(0,0,0);
+ let start=new Date(nowD.getTime()-48*3600e3);const ld=new Date(L.ts);if(ld>start)start=ld;
+ let add=0;
+ for(let d=new Date(start.getTime()+3600e3);d<=nowD;d=new Date(d.getTime()+3600e3)){
+  if(!inNight(d.getHours()))continue;
+  const ts=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":00";
+  if(S.log.some(x=>x.ts===ts))continue;
+  const prev=S.log.slice().reverse().find(x=>x.ts<ts);
+  S.log.push({ts,note:"অটো · রাতের নিয়ম",rooms:S.rooms.map(r=>({room:r.name,apps:r.apps.map(a=>{
+   let u=nightU(a);
+   if(!u){const pr=prev&&prev.rooms.find(x=>x.room===r.name);const pa=pr&&pr.apps.find(x=>x.name===a.name);u=Array.from({length:a.qty},(_,i)=>pa&&pa.u?(pa.u[i]||0):(pa&&i<pa.cnt?1:0))}
+   return{name:a.name,cnt:u.reduce((s,x)=>s+x,0),watt:a.watt,u}})}))});
+  S.log.sort((a,b)=>a.ts<b.ts?-1:1);add++}
+ if(add)persist();return add}
+function setU(a,n,pre){a.u=Array.from({length:a.qty},(_,i)=>pre&&pre[i]!==undefined?pre[i]:(i<n?1:0))}
+function resetIn(c){VR=JSON.parse(JSON.stringify(S.rooms));cur=c||lastCounts();{const L=S.log[S.log.length-1];VR.forEach((r,ri)=>r.apps.forEach((a,ai)=>{const lr=!c&&L&&L.rooms.find(x=>x.room===r.name);const la=lr&&lr.apps.find(x=>x.name===a.name);setU(a,cur[ri][ai],la&&la.u)}))}editTs=null;if(!c&&inNight(new Date().getHours()))applyNight();$("note").value="";$("ban").classList.add("hide");$("same").classList.remove("hide");$("save").textContent="✅ সেভ করুন";$("dt").value=nowHour();renderIn()}
+function startEdit(ts){
+ const e=S.log.find(x=>x.ts===ts);if(!e)return;
+ VR=e.rooms.map(r=>({name:r.room,apps:r.apps.map(a=>{const cr=S.rooms.find(x=>x.name===r.room);const ca=cr&&cr.apps.find(x=>x.name===a.name);const qy=Math.max(a.cnt,ca?ca.qty:1,a.u?a.u.length:0,1);return{name:a.name,qty:qy,watt:a.watt,u:Array.from({length:qy},(_,i)=>a.u?(a.u[i]||0):(i<a.cnt?1:0))}})}));
+ cur=e.rooms.map(r=>r.apps.map(a=>a.cnt));
+ editTs=ts;$("dt").value=ts;$("note").value=e.note||"";
+ $("ban").classList.remove("hide");$("same").classList.add("hide");$("save").textContent="💾 আপডেট করুন";
+ renderIn();document.querySelector('.tabs button[data-t="in"]').click();window.scrollTo(0,0)}
+function stopEdit(){resetIn()}
+$("dt").onchange=()=>{if(editTs)return;const h=+$("dt").value.slice(11,13);if(inNight(h)){applyNight();renderIn();toast("রাতের নিয়ম প্রয়োগ হয়েছে")}};
+$("cx").onclick=stopEdit;
+$("allof").onclick=()=>{VR.forEach(r=>r.apps.forEach(a=>a.u=a.u.map(()=>0)));renderIn()};
+$("allon").onclick=()=>{VR.forEach(r=>r.apps.forEach(a=>a.u=a.u.map(()=>1)));renderIn()};
+$("same").onclick=()=>resetIn();
+$("save").onclick=()=>{
+ const ts=$("dt").value;if(!ts){toast("সময় দিন");return}
+ const e={ts,note:$("note").value.trim(),rooms:VR.map((r,ri)=>({room:r.name,apps:r.apps.map((a,ai)=>({name:a.name,cnt:a.u.reduce((s,x)=>s+x,0),watt:a.watt,u:a.u}))}))};
+ const i=S.log.findIndex(x=>x.ts===ts);
+ if(i>=0&&ts!==editTs&&!confirm("এই সময়ে আগেই এন্ট্রি আছে। ওভাররাইট করবেন?"))return;
+ if(editTs&&editTs!==ts){const k=S.log.findIndex(x=>x.ts===editTs);if(k>=0)S.log.splice(k,1)}
+ const j=S.log.findIndex(x=>x.ts===ts);
+ if(j>=0)S.log[j]=e;else S.log.push(e);
+ S.log.sort((a,b)=>a.ts<b.ts?-1:1);persist();toast(editTs?"আপডেট হয়েছে ✓":"সেভ হয়েছে ✓");renderHist();if(editTs)stopEdit()};
+// ---- calc ----
+const rLoad=r=>r.apps.reduce((s,a)=>s+a.cnt*a.watt,0);
+const eLoad=e=>e.rooms.reduce((s,r)=>s+rLoad(r),0);
+function roomNames(){const n=[];S.log.forEach(e=>e.rooms.forEach(r=>{if(!n.includes(r.room))n.push(r.room)}));return n}
+const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+function csvMain(){
+ const rn=roomNames();
+ const L=[["Date","Time",...rn.map(n=>n+"_Load_W"),"Total_Load_W","Energy_kWh_1h","Note"].map(q).join(",")];
+ S.log.forEach(e=>{const[d,t]=e.ts.split("T");const tot=eLoad(e);
+  L.push([d,t,...rn.map(n=>{const r=e.rooms.find(x=>x.room===n);return r?rLoad(r):0}),tot,(tot/1000).toFixed(3),e.note||""].map(q).join(","))});
+ return L.join("\n")}
+function csvDetail(){
+ const L=[["Date","Time","Room","Appliance","Count_ON","Watt_each","Load_W","Unit_States"].map(q).join(",")];
+ S.log.forEach(e=>{const[d,t]=e.ts.split("T");e.rooms.forEach(r=>r.apps.forEach(a=>L.push([d,t,r.room,a.name,a.cnt,a.watt,a.cnt*a.watt,a.u?a.u.join("|"):""].map(q).join(","))))});
+ return L.join("\n")}
+function renderHist(){
+ const last=S.log.slice(-24),rn=roomNames();
+ const kwh=last.reduce((s,e)=>s+eLoad(e),0)/1000;
+ $("k1").textContent=kwh.toFixed(2);$("k2").textContent=(kwh*(S.tariff||0)).toFixed(1);$("k3").textContent=S.log.length;
+ $("rk").innerHTML=rn.length?"":"<div class='hd'>এখনো ডেটা নেই</div>";
+ rn.forEach(n=>{const k=last.reduce((s,e)=>{const r=e.rooms.find(x=>x.room===n);return s+(r?rLoad(r):0)},0)/1000;
+  const d=document.createElement("div");d.className="row";d.innerHTML="<div class='n'></div><b></b>";
+  d.querySelector(".n").textContent=n;d.querySelector("b").textContent=k.toFixed(2)+" kWh";$("rk").appendChild(d)});
+ const csv=csvMain();$("pv").textContent=S.log.length?csv:"(এখনো কোনো এন্ট্রি নেই)";
+ $("csvn").textContent="home_load.csv · "+S.log.length+" সারি";
+ let h="<table><tr><th>তারিখ</th><th>সময়</th>"+rn.map(n=>"<th></th>").join("")+"<th>মোট W</th></tr>";
+ const t=document.createElement("table");
+ const tr=t.insertRow();["তারিখ","সময়",...rn,"মোট W","নোট",""].forEach(x=>{const c=document.createElement("th");c.textContent=x;tr.appendChild(c)});
+ S.log.slice().reverse().slice(0,200).forEach(e=>{const r=t.insertRow();const[d,tm]=e.ts.split("T");
+  [d,tm,...rn.map(n=>{const x=e.rooms.find(y=>y.room===n);return x?rLoad(x):"-"}),eLoad(e),e.note||""].forEach(v=>{r.insertCell().textContent=v});
+  const ac=r.insertCell();
+  const be=document.createElement("button");be.className="btn g sm";be.textContent="✎ এডিট";be.onclick=()=>startEdit(e.ts);
+  const bd=document.createElement("button");bd.className="btn g sm";bd.textContent="🗑";bd.style.marginLeft="4px";
+  bd.onclick=()=>{if(confirm(e.ts.replace("T"," ")+" এন্ট্রি মুছবেন?")){S.log=S.log.filter(x=>x.ts!==e.ts);persist();renderHist()}};
+  ac.append(be,bd)});
+ $("tb").innerHTML="";$("tb").appendChild(t)}
+async function save(name,text){
+ try{const P=window.Capacitor&&Capacitor.Plugins;
+  if(P&&P.Filesystem&&P.Share){
+   const r=await P.Filesystem.writeFile({path:name,data:"\ufeff"+text,directory:"CACHE",encoding:"utf8"});
+   await P.Share.share({title:name,files:[r.uri],dialogTitle:"CSV সেভ / শেয়ার করুন"});return}
+  const l=document.createElement("a");l.href=URL.createObjectURL(new Blob(["\ufeff"+text],{type:"text/csv"}));l.download=name;l.click();
+ }catch(e){if(!e||!/cancel/i.test(e.message||""))toast("সেভ করা যায়নি")}}
+$("dl").onclick=()=>S.log.length?save("home_load.csv",csvMain()):toast("আগে এন্ট্রি দিন");
+$("dl2").onclick=()=>S.log.length?save("home_load_detail.csv",csvDetail()):toast("আগে এন্ট্রি দিন");
+$("cp").onclick=async()=>{try{await navigator.clipboard.writeText(csvMain());toast("কপি হয়েছে ✓")}catch(e){toast("কপি করা যায়নি")}};
+$("del").onclick=()=>{if(S.log.length&&confirm("শেষ এন্ট্রি মুছবেন?")){S.log.pop();persist();renderHist()}};
+$("clr").onclick=()=>{if(confirm("সব এন্ট্রি মুছে যাবে। নিশ্চিত?")){S.log=[];persist();renderHist()}};
+// ---- config ----
+function renderCfg(){
+ $("tf").value=S.tariff||"";$("nt").checked=!!S.night.on;$("nf").value=S.night.from;$("ne").value=S.night.to;$("al").checked=!!S.alarm.on;$("am").value=S.alarm.min;
+ const h=$("cfgr");h.innerHTML="";
+ S.rooms.forEach((r,ri)=>{
+  const c=document.createElement("div");c.className="card";
+  c.innerHTML='<h3><input type="text" style="font-weight:600"><button class="btn g sm">ঘর মুছুন</button></h3><div class="cfg hd"><span>যন্ত্র</span><span>সংখ্যা</span><span>Watt</span><span>রাতের অবস্থা</span><span></span></div>';
+  const ni=c.querySelector("input");ni.value=r.name;ni.onchange=()=>{r.name=ni.value||r.name;persist();resetIn(cur)};
+  c.querySelector("button").onclick=()=>{if(confirm(r.name+" মুছবেন?")){S.rooms.splice(ri,1);persist();renderCfg();resetIn()}};
+  r.apps.forEach((a,ai)=>{
+   const g=document.createElement("div");g.className="cfg";
+   g.innerHTML='<input type="text"><input type="number" min="1"><input type="number" min="0"><select><option value="">নিয়ম নেই</option><option value="off">OFF থাকবে</option><option value="on">ON থাকবে</option></select><button class="btn g sm">✕</button>';
+   const i=g.querySelectorAll("input");i[0].value=a.name;i[1].value=a.qty;i[2].value=a.watt;const sl=g.querySelector("select");sl.value=a.night||"";sl.onchange=()=>{a.night=sl.value;persist();resetIn(cur)};
+   i[0].onchange=()=>{a.name=i[0].value||a.name;persist();resetIn(cur)};
+   i[1].onchange=()=>{a.qty=Math.max(1,+i[1].value||1);persist();resetIn()};
+   i[2].onchange=()=>{a.watt=Math.max(0,+i[2].value||0);persist();resetIn(cur)};
+   g.querySelector("button").onclick=()=>{r.apps.splice(ai,1);persist();renderCfg();resetIn()};
+   c.appendChild(g)});
+  const add=document.createElement("button");add.className="btn g sm";add.style.marginTop="8px";add.textContent="+ যন্ত্র যোগ";
+  add.onclick=()=>{r.apps.push({name:"নতুন",qty:1,watt:10});persist();renderCfg();resetIn()};
+  c.appendChild(add);h.appendChild(c)})}
+$("tf").onchange=()=>{S.tariff=+$("tf").value||0;persist();renderHist()};
+$("nt").onchange=()=>{S.night.on=$("nt").checked;persist();scheduleAlarms()};
+$("nf").onchange=()=>{S.night.from=Math.min(23,Math.max(0,+$("nf").value||0));persist();scheduleAlarms()};
+$("ne").onchange=()=>{S.night.to=Math.min(24,Math.max(1,+$("ne").value||6));persist();scheduleAlarms()};
+$("addr").onclick=()=>{S.rooms.push({name:"ঘর "+(S.rooms.length+1),apps:[{name:"Light",qty:1,watt:10}]});persist();renderCfg();resetIn()};
+// ---- alarm (Android) ----
+const LN=()=>window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;
+async function ensureChannel(){await LN().createChannel({id:"hourly",name:"ঘণ্টার অ্যালার্ম",description:"প্রতি ঘণ্টার ইনপুট রিমাইন্ডার",importance:5,visibility:1,vibration:true})}
+async function alarmPerm(){const l=LN();if(!l){$("ast").textContent="অ্যালার্ম শুধু Android অ্যাপে কাজ করে।";return false}
+ try{let p=await l.checkPermissions();if(p.display!=="granted")p=await l.requestPermissions();
+  if(p.display!=="granted"){$("ast").textContent="নোটিফিকেশন অনুমতি দেওয়া হয়নি। ফোনের সেটিংস থেকে চালু করুন।";return false}
+  try{const e=await l.checkExactNotificationSetting();if(e.exact_alarm!=="granted")await l.changeExactNotificationSetting()}catch(_){}
+  return true}catch(e){$("ast").textContent="অনুমতি সমস্যা: "+(e.message||e);return false}}
+async function scheduleAlarms(){const l=LN();if(!l)return;
+ try{
+  const pend=await l.getPending();if(pend.notifications.length)await l.cancel({notifications:pend.notifications.map(n=>({id:n.id}))});
+  if(!S.alarm.on){$("ast").textContent="অ্যালার্ম বন্ধ আছে।";return}
+  await ensureChannel();
+  const ns=[];for(let h=0;h<24;h++){if(inNight(h))continue;
+   ns.push({id:100+h,title:"⚡ লোড ইনপুট দিন",body:"এখন কোন কোন লাইট/ফ্যান ON আছে?",channelId:"hourly",schedule:{on:{hour:h,minute:S.alarm.min},allowWhileIdle:true}})}
+  if(ns.length)await l.schedule({notifications:ns});
+  $("ast").textContent="✓ প্রতিদিন "+ns.length+"টি অ্যালার্ম সেট আছে (রাতের ঘণ্টা বাদে)";
+ }catch(e){$("ast").textContent="অ্যালার্ম সেট করা যায়নি: "+(e.message||e)}}
+async function startAlarm(){const l=LN();if(!l||!S.alarm.on)return;
+ try{let p=await l.checkPermissions();if(p.display!=="granted"&&!S.alarm.asked){S.alarm.asked=1;persist();p=await l.requestPermissions()}
+  if(p.display==="granted")scheduleAlarms()}catch(e){}}
+$("al").onchange=()=>{S.alarm.on=$("al").checked;persist();if(S.alarm.on)alarmPerm().then(ok=>ok&&scheduleAlarms());else scheduleAlarms()};
+$("am").onchange=()=>{S.alarm.min=Math.min(59,Math.max(0,+$("am").value||0));persist();scheduleAlarms()};
+$("aperm").onclick=async()=>{if(await alarmPerm())scheduleAlarms()};
+$("atest").onclick=async()=>{const l=LN();if(!l){toast("শুধু অ্যাপে কাজ করে");return}
+ if(!(await alarmPerm()))return;await ensureChannel();
+ await l.schedule({notifications:[{id:999,title:"⚡ টেস্ট অ্যালার্ম",body:"অ্যালার্ম ঠিকমতো কাজ করছে",channelId:"hourly",schedule:{at:new Date(Date.now()+10000),allowWhileIdle:true}}]});toast("১০ সেকেন্ড পর বাজবে")};
+// ---- tabs ----
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
+ ["in","hist","cfg"].forEach(id=>$(id).classList.toggle("hide",id!==b.dataset.t));
+ if(b.dataset.t==="hist")renderHist();if(b.dataset.t==="cfg")renderCfg()});
+const af=autoFill();persist();resetIn();renderHist();if(af)toast("রাতের "+af+"টি এন্ট্রি অটো যোগ হয়েছে");
+setInterval(()=>{if(autoFill())renderHist()},300000);
+startAlarm();
+document.addEventListener("visibilitychange",()=>{if(document.hidden)return;if(autoFill())renderHist();if(!editTs&&$("dt").value!==nowHour())resetIn()});
+</script>
+</body>
+</html>
